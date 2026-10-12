@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Payment - Car Rental</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+    <h1>Payment for Booking</h1>
+    <p><strong>Car:</strong> {{ booking.car.name }}</p>
+    <p><strong>Days:</strong> {{ booking.days }}</p>
+    <p><strong>Kilometers:</strong> {{ booking.kilometers }}</p>
+    <p><strong>Total Price:</strong> ${{ booking.total_price }}</p>
+
+    <form method="POST" novalidate>
+        <label>Select Payment Method:</label><br/>
+        <select name="payment_method" required>
+            <option value="">-- Choose --</option>
+            <option value="Credit Card">Credit Card</option>
+            <option value="Debit Card">Debit Card</option>
+            <option value="UPI">UPI</option>
+            <option value="Net Banking">Net Banking</option>
+            <option value="Cash on Delivery">Cash on Delivery</option>
+        </select><br/><br/>
+        <button type="submit">Pay Now</button>
+    </form>
+
+    <p><a href="{{ url_for('home') }}">Back to Home</a></p>
+</body>
+</html>

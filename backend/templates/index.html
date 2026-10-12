@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Car Rental Platform</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <style>
+        .paid-row {
+            background-color: #c8e6c9;
+        }
+        .unpaid-row {
+            background-color: #ffcdd2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome, {{ username }}</h1>
+    <a href="{{ url_for('logout') }}">Logout</a>
+
+    <h2>Available Cars</h2>
+    <div id="car-list"></div>
+
+    <h2>Book a Car</h2>
+    <form id="booking-form">
+        <label for="car-select">Select Car:</label>
+        <select id="car-select" required></select><br/><br/>
+
+        <label for="user-name">Your Name:</label>
+        <input type="text" id="user-name" value="{{ username }}" readonly /><br/><br/>
+
+        <label for="days">Number of Days:</label>
+        <input type="number" id="days" min="1" required /><br/><br/>
+
+        <label for="kilometers">Estimated Kilometers to Travel:</label>
+        <input type="number" id="kilometers" min="1" required /><br/><br/>
+
+        <button type="submit">Book Now</button>
+    </form>
+
+    <div id="message"></div>
+
+    <h2>Your Bookings</h2>
+    <p><a href="{{ url_for('cancel_booking_page') }}" style="color: #e65100; font-weight: bold;">Cancel a Booking using Receipt Number</a></p>
+    <table style="width:100%; border-collapse: collapse;">
+        <thead>
+            <tr style="background-color: #ef6c00; color: white;">
+                <th style="padding: 10px; border: 1px solid #ddd;">Car</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Days</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Kilometers</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Total Price</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Paid</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Receipt Number</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for booking in bookings %}
+            <tr class="{% if booking.is_paid %}paid-row{% else %}unpaid-row{% endif %}" style="text-align:center;">
+                <td style="padding: 10px; border: 1px solid #ddd;">{{ booking.car.name }}</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">{{ booking.days }}</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">{{ booking.kilometers }}</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">${{ booking.total_price }}</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">{{ 'Yes' if booking.is_paid else 'No' }}</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">{{ booking.receipt_number }}</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">
+                    {% if not booking.is_paid %}
+                        <a href="{{ url_for('payment', booking_id=booking.id) }}" style="color:#ef6c00; font-weight:bold; margin-right: 10px;">Pay Now</a>
+                    {% else %}
+                        <span style="color: green; font-weight: bold; margin-right: 10px;">Paid</span>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
